@@ -1,61 +1,58 @@
-const palette = require('nice-color-palettes');
-console.log(palette);
+const palettes = require('nice-color-palettes/1000');
+const {SimplexNoise} = require('simplex-noise');
 
-const s = ( sketch ) => { 
+const s = ( sketch ) => {
+	
+	sketch.randomSeed();
+
+	const createGrid = () => { 
+		const points = [];
+		const count = 20;
+
+		const palette = sketch.random(palettes)
+		const simplex = new SimplexNoise(sketch.random());
+
+
+		for (let x = 0; x < count; x++){ 
+			for (let y = 0; y < count; y++){ 
+				const u = count <= 1 ? 0.5 : x / (count - 1);
+				const v = count <= 1 ? 0.5 : y / (count - 1);
+
+				points.push({
+					color: sketch.random(palette),
+					position: [u, v],
+				});
+			}
+		}
+		
+		return points;
+	};
+
 
 	sketch.setup = () => { 
-		card = sketch.createCanvas(400, 400);
+		card = sketch.createCanvas(600, 600);
 		sketch.background('white');
-		sketch.angleMode(sketch.DEGREES)
-
-		const createGrid = () => {
-			const count = 30;
-			const points = [];
-			c = sketch.width/count;
 		
-			for (let i = 0; i < count; i++) {
-				for (let j = 0; j < count; j++) {
-		
-					const x = sketch.width / (count * 2) + c * i
-					const y = sketch.width / (count * 2) + c * j
-		
-					points.push({ 
-						position: [x, y],
-						rotation: sketch.random(0, 360),
-						color: ["#69d2e7", "#a7dbd8", "#e0e4cc", "#f38630", "#fa6900"],
-						scale: sketch.randomGaussian(12, 5)		
-					});
-					
-				}
-			}
-			return points;
-	
-		};
+		const points = createGrid().filter(() => sketch.random() > 0.5);
+		const margin = 20;
 
-		const points = createGrid();
+		points.forEach(data => {
 
-		points.forEach(data => { 
-	
-			const { 
+			const {
 				position,
-				rotation,
 				color,
-				scale,
 			} = data;
-			
-			const [x,y] = position;
-	
-			sketch.push();
-			sketch.translate(x, y)
-			sketch.rotate(rotation)
-			sketch.rectMode(sketch.CENTER);
-			sketch.fill(sketch.random(color));
-			sketch.noStroke();
-			sketch.rect(0,0,scale,scale);
-			sketch.pop();
-	
-		})
 
+			const [ u, v ] = position;
+			const x = sketch.lerp(margin, sketch.width - margin, u);
+			const y = sketch.lerp(margin, sketch.height - margin, v);
+
+			sketch.strokeWeight(4)			
+			sketch.ellipse(x,y,20,20)
+
+
+
+		});
 	};
 
 	sketch.draw = () => { 

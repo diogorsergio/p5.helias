@@ -4,9 +4,11 @@
   "description": "",
   "main": "p5.svg.js",
   "dependencies": {
-    "nice-color-palettes": "^3.0.0"
+    "canvas-sketch-util": "^1.10.0",
+    "nice-color-palettes": "^3.0.0",
+    "simplex-noise": "^3.0.0",
+    "watchify": "^4.0.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
