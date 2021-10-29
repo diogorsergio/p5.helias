@@ -4,6 +4,7 @@
   "description": "",
   "main": "p5.svg.js",
   "dependencies": {
+    "alea": "^1.0.1",
     "canvas-sketch-util": "^1.10.0",
     "nice-color-palettes": "^3.0.0",
     "simplex-noise": "^3.0.0",
