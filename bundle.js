@@ -44,7 +44,7 @@ const s = ( sketch ) => {
 		// Create grid system
 		const createGrid = () => { 
 			const points = [];
-			const count = 8 / sX;
+			const count = 6 / sX;
 	
 			for (let x = 0; x < count; x++){ 
 				for (let y = 0; y < count; y++){ 
