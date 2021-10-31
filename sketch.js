@@ -2,28 +2,26 @@ const palettes = require('nice-color-palettes/1000');
 
 const s = ( sketch ) => {
 
-	let theseed = sketch.int(sketch.random(0,10000));
-	sketch.randomSeed(theseed);
-	sketch.noiseSeed(theseed);
-	console.log('Seed:'+theseed)
+	let sX = 0.5
+	let vH = 0.5
+	let randomPalette = sketch.random(palettes)
 
-	sketch.randomizePoints = () => { 	
-		theseed = sketch.int(sketch.random(0,10000));
+	sketch.randomizeSeed = () => { 
+		let theseed = sketch.int(sketch.random(0,10000));
 		sketch.randomSeed(theseed);
 		sketch.noiseSeed(theseed);
-		console.log('Seed:' +theseed)
-		sketch.setup();
 	}
 
-	let randomPalette = sketch.random(palettes)
-	console.log(randomPalette)
+	sketch.randomizePoints = () => { 	
+		vH = sketch.random(0.4, 0.9)
+	}
 
 	sketch.randomizePalette = () => {
 		randomPalette = sketch.random(palettes);
-		theseed = sketch.int(sketch.random(0,10000));
-		sketch.randomSeed(theseed);
-		sketch.noiseSeed(theseed);
-		sketch.setup();
+	}
+
+	sketch.randomizeScale = () => { 
+		sX = sketch.random()
 	}
 
 	// Start of Setup   
@@ -32,8 +30,10 @@ const s = ( sketch ) => {
 		sketch.background(sketch.random(randomPalette));
 		sketch.circles()
 	}
-	// End of Setup   
 
+	sketch.reloadSketch = () => {
+		sketch.circles()
+	}
 
 	// Start of Circles  
 	sketch.circles = () => { 
@@ -41,7 +41,7 @@ const s = ( sketch ) => {
 		// Create grid system
 		const createGrid = () => { 
 			const points = [];
-			const count = 10;
+			const count = 8 / sX;
 	
 			for (let x = 0; x < count; x++){ 
 				for (let y = 0; y < count; y++){ 
@@ -59,10 +59,10 @@ const s = ( sketch ) => {
 		// End of creat grid system
 			
 		// Randomize grid 
-		const points = createGrid().filter(() => sketch.random() > 0.5);
+		const points = createGrid().filter(() => sketch.random() > vH);
 
 		// Setup Margin
-		const margin = 20;
+		const margin = 10;
 
 		// Drawing Start
 		points.forEach(data => {
@@ -76,20 +76,19 @@ const s = ( sketch ) => {
 			const y = sketch.lerp(margin, sketch.height - margin, v);
 
 			let noiseMax = 0.8;
-			let yoof = 0
-			let xoff = 0
 			let zoff = 0;
 
 			for (let i = 0; i < 3; i+=1) {
 				sketch.push();
 				sketch.stroke(sketch.random(randomPalette));
 				sketch.translate(x,y)
+				sketch.rotate(sketch.random(360))
 				sketch.fill(sketch.random(randomPalette))
 				sketch.beginShape();
 				for (let a = 0; a < sketch.TWO_PI; a+=0.1) { 
 					let xoff = sketch.map(sketch.cos(a), -1, 1, 0, noiseMax);
 					let yoff = sketch.map(sketch.cos(a), -1, 1, 0, noiseMax);
-					let r = sketch.map(sketch.noise(xoff, yoff, zoff), 0, 1, 200, 300);
+					let r = sketch.map(sketch.noise(xoff, yoff, zoff), 0, 1, 200 * sX, 300 * sX);
 					let x = r * sketch.cos(a);
 					let y = r * sketch.sin(a);
 					sketch.vertex(x,y)
@@ -103,12 +102,13 @@ const s = ( sketch ) => {
 				sketch.push();
 				sketch.stroke(sketch.random(randomPalette));
 				sketch.translate(x,y)
+				sketch.rotate(sketch.random(360))
 				sketch.fill(sketch.random(randomPalette))
 				sketch.beginShape();
 				for (let a = 0; a < sketch.TWO_PI; a+=0.1) { 
 					let xoff = sketch.map(sketch.cos(a), -1, 1, 0, noiseMax);
 					let yoff = sketch.map(sketch.cos(a), -1, 1, 0, noiseMax);
-					let r = sketch.map(sketch.noise(xoff, yoff, zoff), 0, 1, 100, 200);
+					let r = sketch.map(sketch.noise(xoff, yoff, zoff), 0, 1, 100 * sX, 150 * sX);
 					let x = r * sketch.cos(a);
 					let y = r * sketch.sin(a);
 					sketch.vertex(x,y)
@@ -129,16 +129,36 @@ const s = ( sketch ) => {
 
 	// Shortcuts
 	sketch.keyPressed = () => { 
-		if (sketch.keyIsDown(83)) { 
-			sketch.saveCanvas(card, 'Circles'+theseed, 'png');
-		} else if (sketch.keyIsDown(79)) { 
-			sketch.randomizePoints();
-		} else if (sketch.keyIsDown(78)) { 
-			sketch.exportN();
-		} else if (sketch.keyIsDown(80)) { 
+		if (sketch.keyIsDown(80)) {  // P - Random Palette
 			sketch.randomizePalette();
-		} else if (sketch.keyIsDown(77)) { 
-			sketch.exportM();
+			sketch.setup();
+		} else if (sketch.keyIsDown(79)) { // O - Cycle Palette
+			sketch.randomizeSeed();
+			sketch.setup();
+		} else if (sketch.keyIsDown(76)) { // L - Increase Points
+			vH += 0.05
+			console.log('Visibility:'+vH)
+			sketch.setup();
+		} else if (sketch.keyIsDown(75)) { // K - Decrease Points
+			vH -= 0.05
+			console.log('Visibility:'+vH)
+			sketch.setup();
+		} else if (sketch.keyIsDown(85)) { // U - Random Scale
+			sX = sketch.random()
+			sketch.setup();
+		} else if (sketch.keyIsDown(74)) { // J - Increase Scale
+			sX += 0.05
+			console.log('Scale:'+sX)
+			sketch.setup();
+		} else if (sketch.keyIsDown(72)) { // H - Decrease Scale
+			sX -= 0.05
+			console.log('Scale:'+sX)
+			sketch.setup();
+		} else if (sketch.keyIsDown(82)) { 
+			sketch.randomizePalette();
+			sketch.randomizePoints();
+			sketch.randomizeScale();
+			sketch.setup();
 		}
 	}
 
