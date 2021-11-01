@@ -29,9 +29,12 @@ const s = ( sketch ) => {
 
 	// Start of Setup   
 	sketch.setup = () => { 
+
 		card = sketch.createCanvas(1600, 1600);
 		sketch.background(sketch.random(randomPalette));
 		sketch.circles()
+
+		card.parent('sketch-box');
 	}
 
 	sketch.reloadSketch = () => {
@@ -44,7 +47,7 @@ const s = ( sketch ) => {
 		// Create grid system
 		const createGrid = () => { 
 			const points = [];
-			const count = 8 / sX;
+			const count = 6 / sX;
 	
 			for (let x = 0; x < count; x++){ 
 				for (let y = 0; y < count; y++){ 
@@ -130,8 +133,9 @@ const s = ( sketch ) => {
 
 	};
 
+	let counter = 1;
 	// Shortcuts
-	sketch.keyPressed = () => { 
+	sketch.keyPressed = () => {
 		if (sketch.keyIsDown(80)) {  // P - Random Palette
 			sketch.randomizePalette();
 			sketch.setup();
@@ -162,25 +166,12 @@ const s = ( sketch ) => {
 			sketch.randomizePoints();
 			sketch.randomizeScale();
 			sketch.setup();
+		} else if (sketch.keyIsDown(83)) { 
+			sketch.saveCanvas(card, 'Circles'+counter, 'png')
+			counter += 1;
 		}
 	}
 
-	// Export Both Random
-	sketch.exportM = () => { 
-		for (let i = 0; i < 10; i+=1) { 
-			sketch.randomizePoints();
-			sketch.randomizePalette();
-			sketch.saveCanvas(card, 'Circles'+theseed, 'png');
-		}
-	}
-
-	// Export Current Palette
-	sketch.exportN = () => { 
-		for (let i = 0; i < 10; i+=1) { 
-			sketch.randomizePoints();
-			sketch.saveCanvas(card, 'Circles'+theseed, 'png');
-		}
-	}
 
 	
 };
