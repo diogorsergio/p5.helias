@@ -114,7 +114,7 @@ const s = ( sketch ) => {
 			for (let i = 0; i < 3; i+=1) {
 				sketch.push();
 				sketch.stroke(sketch.random(randomPalette));
-				sketch.translate(x+sZ*sketch.random(20),y+sZ*sketch.random(20))
+				sketch.translate(x,y)
 				sketch.rotate(sketch.random(360))
 				sketch.fill(sketch.random(randomPalette))
 				sketch.beginShape();
