@@ -10,6 +10,7 @@ const s = ( sketch ) => {
 		let theseed = sketch.int(sketch.random(0,10000));
 		sketch.randomSeed(theseed);
 		sketch.noiseSeed(theseed);
+		sketch.random(theseed)
 	}
 
 	sketch.randomizePoints = () => { 	
@@ -30,7 +31,9 @@ const s = ( sketch ) => {
 		card = sketch.createCanvas(1600, 1600);
 		sketch.background(sketch.random(randomPalette));
 		sketch.circles()
-
+		sketch.randomSeed(theseed);
+		sketch.noiseSeed(theseed);
+		sketch.random(theseed)
 		card.parent('sketch-box');
 	}
 
@@ -161,12 +164,12 @@ const s = ( sketch ) => {
 			sX -= 0.05
 			console.log('Scale:'+sX)
 			sketch.setup();
-		} else if (sketch.keyIsDown(82)) { 
+		} else if (sketch.keyIsDown(82)) { // R - Randomize All
 			sketch.randomizePalette();
 			sketch.randomizePoints();
 			sketch.randomizeScale();
 			sketch.setup();
-		} else if (sketch.keyIsDown(83)) { 
+		} else if (sketch.keyIsDown(83)) { // S - Save Canvas
 			sketch.saveCanvas(card, 'Circles'+counter, 'png')
 			counter += 1;
 		}
