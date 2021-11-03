@@ -31,9 +31,7 @@ const s = ( sketch ) => {
 		card = sketch.createCanvas(1600, 1600);
 		sketch.background(sketch.random(randomPalette));
 		sketch.circles()
-		sketch.randomSeed(theseed);
-		sketch.noiseSeed(theseed);
-		sketch.random(theseed)
+
 		card.parent('sketch-box');
 	}
 
