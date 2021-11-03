@@ -54,8 +54,8 @@ const s = ( sketch ) => {
 					let u = count <= 1 ? 0.5 : x / (count - 1);
 					let v = count <= 1 ? 0.5 : y / (count - 1);
 
-					u = u += sketch.random(-0.04, 0.04)
-					v = v += sketch.random(-0.04, 0.04)
+					u = u += sketch.random(-0.02, 0.02)
+					v = v += sketch.random(-0.02, 0.02)
 	
 					points.push({
 						position: [u, v],
