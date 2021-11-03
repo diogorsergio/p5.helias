@@ -43,13 +43,16 @@ const s = ( sketch ) => {
 	
 		// Create grid system
 		const createGrid = () => { 
-			const points = [];
+			let points = [];
 			const count = 6 / sX;
 	
 			for (let x = 0; x < count; x++){ 
 				for (let y = 0; y < count; y++){ 
-					const u = count <= 1 ? 0.5 : x / (count - 1);
-					const v = count <= 1 ? 0.5 : y / (count - 1);
+					let u = count <= 1 ? 0.5 : x / (count - 1);
+					let v = count <= 1 ? 0.5 : y / (count - 1);
+
+					u = u += sketch.random(-0.04, 0.04)
+					v = v += sketch.random(-0.04, 0.04)
 	
 					points.push({
 						position: [u, v],
