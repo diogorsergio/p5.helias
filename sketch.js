@@ -1,10 +1,13 @@
 const palettes = require('nice-color-palettes/1000');
+const SimplexNoise = require('simplex-noise');
 
 const s = ( sketch ) => {
 
 	let sX = 0.5
 	let vH = 0.5
 	let randomPalette = sketch.random(palettes)
+	simplex = new SimplexNoise(sketch.random())
+
 
 	sketch.randomizeSeed = () => { 
 		let theseed = sketch.int(sketch.random(0,10000));
@@ -53,8 +56,11 @@ const s = ( sketch ) => {
 
 					u = u += sketch.random(-0.02, 0.02)
 					v = v += sketch.random(-0.02, 0.02)
+
+					const sZ = sketch.abs(simplex.noise2D(u,v))
 	
 					points.push({
+						sZ,
 						position: [u, v],
 					});
 				}
@@ -73,6 +79,7 @@ const s = ( sketch ) => {
 		// Drawing Start
 		points.forEach(data => {
 			const {
+				sZ,
 				position,
 			} = data;
 
@@ -94,7 +101,7 @@ const s = ( sketch ) => {
 				for (let a = 0; a < sketch.TWO_PI; a+=0.1) { 
 					let xoff = sketch.map(sketch.cos(a), -1, 1, 0, noiseMax);
 					let yoff = sketch.map(sketch.cos(a), -1, 1, 0, noiseMax);
-					let r = sketch.map(sketch.noise(xoff, yoff, zoff), 0, 1, 200 * sX, 300 * sX);
+					let r = sketch.map(sketch.noise(xoff, yoff, zoff), 0, 1, 200 * sZ, 300 * sZ);
 					let x = r * sketch.cos(a);
 					let y = r * sketch.sin(a);
 					sketch.vertex(x,y)
@@ -107,14 +114,14 @@ const s = ( sketch ) => {
 			for (let i = 0; i < 3; i+=1) {
 				sketch.push();
 				sketch.stroke(sketch.random(randomPalette));
-				sketch.translate(x,y)
+				sketch.translate(x+sZ*sketch.random(20),y+sZ*sketch.random(20))
 				sketch.rotate(sketch.random(360))
 				sketch.fill(sketch.random(randomPalette))
 				sketch.beginShape();
 				for (let a = 0; a < sketch.TWO_PI; a+=0.1) { 
 					let xoff = sketch.map(sketch.cos(a), -1, 1, 0, noiseMax);
 					let yoff = sketch.map(sketch.cos(a), -1, 1, 0, noiseMax);
-					let r = sketch.map(sketch.noise(xoff, yoff, zoff), 0, 1, 100 * sX, 150 * sX);
+					let r = sketch.map(sketch.noise(xoff, yoff, zoff), 0, 1, 100 * sZ, 150 * sZ);
 					let x = r * sketch.cos(a);
 					let y = r * sketch.sin(a);
 					sketch.vertex(x,y)
