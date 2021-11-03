@@ -514,13 +514,17 @@ const s = ( sketch ) => {
 	let sX = 0.5
 	let vH = 0.5
 	let randomPalette = sketch.random(palettes)
-	simplex = new SimplexNoise(sketch.random())
+	simplex = new SimplexNoise()
 
+	sketch.simplexSeed = () => { 
+		simplex = new SimplexNoise(sketch.random(0,10000))
+	}
 
 	sketch.randomizeSeed = () => { 
 		let theseed = sketch.int(sketch.random(0,10000));
 		sketch.randomSeed(theseed);
 		sketch.noiseSeed(theseed);
+		sketch.random(theseed)
 	}
 
 	sketch.randomizePoints = () => { 	
@@ -622,7 +626,7 @@ const s = ( sketch ) => {
 			for (let i = 0; i < 3; i+=1) {
 				sketch.push();
 				sketch.stroke(sketch.random(randomPalette));
-				sketch.translate(x+sZ*sketch.random(20),y+sZ*sketch.random(20))
+				sketch.translate(x,y)
 				sketch.rotate(sketch.random(360))
 				sketch.fill(sketch.random(randomPalette))
 				sketch.beginShape();
@@ -652,36 +656,51 @@ const s = ( sketch ) => {
 	// Shortcuts
 	sketch.keyPressed = () => {
 		if (sketch.keyIsDown(80)) {  // P - Random Palette
+			sketch.simplexSeed();
+			sketch.randomizeSeed();
 			sketch.randomizePalette();
 			sketch.setup();
 		} else if (sketch.keyIsDown(79)) { // O - Cycle Palette
 			sketch.randomizeSeed();
+			sketch.simplexSeed();
 			sketch.setup();
 		} else if (sketch.keyIsDown(76)) { // L - Increase Points
 			vH += 0.05
 			console.log('Visibility:'+vH)
+			sketch.simplexSeed();
+			sketch.randomizeSeed();
 			sketch.setup();
 		} else if (sketch.keyIsDown(75)) { // K - Decrease Points
 			vH -= 0.05
 			console.log('Visibility:'+vH)
+			sketch.simplexSeed();
+			sketch.randomizeSeed();
 			sketch.setup();
 		} else if (sketch.keyIsDown(85)) { // U - Random Scale
 			sX = sketch.random()
+			sketch.simplexSeed();
+			sketch.randomizeSeed();
 			sketch.setup();
 		} else if (sketch.keyIsDown(74)) { // J - Increase Scale
 			sX += 0.05
 			console.log('Scale:'+sX)
+			sketch.simplexSeed();
+			sketch.randomizeSeed();
 			sketch.setup();
 		} else if (sketch.keyIsDown(72)) { // H - Decrease Scale
 			sX -= 0.05
 			console.log('Scale:'+sX)
+			sketch.simplexSeed();
+			sketch.randomizeSeed();
 			sketch.setup();
-		} else if (sketch.keyIsDown(82)) { 
+		} else if (sketch.keyIsDown(82)) { // R - Randomize All
+			sketch.simplexSeed();
+			sketch.randomizeSeed();
 			sketch.randomizePalette();
 			sketch.randomizePoints();
 			sketch.randomizeScale();
 			sketch.setup();
-		} else if (sketch.keyIsDown(83)) { 
+		} else if (sketch.keyIsDown(83)) { // S - Save Canvas
 			sketch.saveCanvas(card, 'Circles'+counter, 'png')
 			counter += 1;
 		}
