@@ -511,6 +511,9 @@ const SimplexNoise = require('simplex-noise');
 
 const s = ( sketch ) => {
 
+	let theseed = 0
+	let sCounter = 1
+
 	let sX = 0.5
 	let vH = 0.5
 	let randomPalette = sketch.random(palettes)
@@ -521,7 +524,7 @@ const s = ( sketch ) => {
 	}
 
 	sketch.randomizeSeed = () => { 
-		let theseed = sketch.int(sketch.random(0,10000));
+		theseed = sketch.int(sketch.random(0,10000));
 		sketch.randomSeed(theseed);
 		sketch.noiseSeed(theseed);
 		sketch.random(theseed)
@@ -701,12 +704,27 @@ const s = ( sketch ) => {
 			sketch.randomizeScale();
 			sketch.setup();
 		} else if (sketch.keyIsDown(83)) { // S - Save Canvas
-			sketch.saveCanvas(card, 'Circles'+counter, 'png')
+			sketch.saveCanvas(card, 'Helias'+counter, 'png')
 			counter += 1;
+		} else if (sketch.keyIsDown(90)) { // Z - Save 25 Canvas - (U)
+			(function myLoop(i) {
+				setTimeout(function() {
+					sketch.saveCollection();
+				  	console.log('Queue Left:'+(i-1));             
+				  	if (--i) myLoop(i);
+				}, 1000)
+			  })(25);  
 		}
 	}
 
-
+	sketch.saveCollection = () => { 
+		sX = sketch.random()
+		sketch.simplexSeed();
+		// sketch.randomizeSeed();
+		sketch.setup();
+		sketch.saveCanvas(card, 'Helias'+theseed+'.'+sCounter, 'png')
+		sCounter += 1
+	}
 	
 };
 
