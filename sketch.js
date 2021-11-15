@@ -127,6 +127,13 @@ const s = ( sketch ) => {
 		});
 		// Drawing Start
 
+		let frame = 40
+		sketch.noStroke();
+		sketch.rect(0,0,frame,sketch.width)
+		sketch.rect(0,0,sketch.height,frame)
+		sketch.rect(sketch.width-frame,0,frame,sketch.height)
+		sketch.rect(0,sketch.height-frame,sketch.width,frame)
+
 	};
 	// End of Circles   
 
